@@ -1,0 +1,19 @@
+Additional info to get system working with rasp pi.
+
+-Installed PyVisa, pyvisa-py and pyusb
+-Initially this resulted in the USB devs being detcted but with a "Can't get full address..." type error.
+-Resolved this with the following:
+In terminal:
+    sudo -i
+    cp /etc/udev/rules.d/99-com.rules /etc/udev/rules.d/99-com.rules.BAK (Backed up the file)
+    nano /etc/udev/rules.d/99-com.rules
+and ADD
+    SUBSYSTEM=="usb", MODE="0666", GROUP="usbusers"
+then 
+    /etc/init.d/udev restart
+then add permission group
+    groupadd usbusers
+    usermod -a -G usbusers USERNAME
+
+-This resolved the address issue but the Keithley wouldn't respond to write commands (despite saying SUCCESS and *IDN? commands working)
+-Fixed this by manually putting the 2230G into remote using DEVICE.write("SYSTEM:REMOTE")
